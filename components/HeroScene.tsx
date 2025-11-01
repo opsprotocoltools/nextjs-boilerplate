@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-// Teach TS that <points> is a valid JSX tag from three.js
+// Tell TypeScript that <points> is valid JSX
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -44,12 +44,12 @@ function SparkleCloud() {
       opacity: 0.9,
       depthWrite: false,
     });
-    m.color = new THREE.Color('#7dd3fc'); // cyan in your palette
+    m.color = new THREE.Color('#7dd3fc');
     return m;
   }, []);
 
-  useFrame((_, d) => {
-    if (pointsRef.current) pointsRef.current.rotation.y += d * 0.12;
+  useFrame((_, delta) => {
+    if (pointsRef.current) pointsRef.current.rotation.y += delta * 0.12;
   });
 
   return <points ref={pointsRef} geometry={geom} material={mat} />;
