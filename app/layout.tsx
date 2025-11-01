@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ops Protocol Tools",
-  description: "Automate clarity, Monetize Discipline",
+  description: "Automate clarity. Monetize discipline.",
 };
 
 export default function RootLayout({
