@@ -1,39 +1,26 @@
-// app/page.tsx
-export default function Home() {
+"use client";
+
+import dynamic from "next/dynamic";
+
+const HeroScene = dynamic(() => import("../components/HeroScene"), { ssr: false });
+
+export default function HomePage() {
   return (
-    <main style={s.page}>
-      {/* background */}
-      <div style={s.bg} />
-
-      {/* header */}
-      <header style={s.header}>
-        <div style={s.brand}>
-          <img
-            src="/logo.png"
-            alt="Ops Protocol Tools"
-            width={32}
-            height={32}
-            style={{ borderRadius: 6 }}
-          />
-          <span style={s.brandText}>Ops Protocol Tools</span>
-        </div>
-        <nav style={s.nav}>
-          <a style={s.link} href="#products">Products</a>
-          <a style={s.link} href="#automation">Automation</a>
-          <a style={s.ctaSmall} href="#contact">Contact</a>
-        </nav>
-      </header>
-
-      {/* hero */}
-      <section style={s.hero}>
-        <h1 style={s.h1}>Automate clarity. <span style={{opacity:.85}}>Monetize discipline.</span></h1>
-        <p style={s.sub}>
-          A ready-to-ship suite of systems, trackers, and automations for operators who want
-          recurring revenue with low upkeep.
+    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "radial-gradient(1000px 600px at 50% 20%, #132238 0%, #0b1220 60%, #070b14 100%)" }}>
+      <div style={{ width: "100%", maxWidth: 1100, padding: 24 }}>
+        <h1 style={{ textAlign: "center", fontSize: 42, fontWeight: 800, marginBottom: 12, color: "white" }}>
+          Automate clarity. Monetize discipline.
+        </h1>
+        <p style={{ textAlign: "center", opacity: 0.8, color: "white", marginBottom: 24 }}>
+          Interactive network background. Move your mouse.
         </p>
-        <div style={s.heroCtas}>
-          <a style={{...s.btn, ...s.btnPrimary}} href="#products">Explore the Suite</a>
-          <a style={{...s.btn, ...s.btnGhost}} href="#automation">See Automations</a>
+        <div style={{ height: 520, borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.03)", outline: "1px solid rgba(255,255,255,0.06)" }}>
+          <HeroScene />
+        </div>
+      </div>
+    </main>
+  );
+}
         </div>
         <div style={s.badges}>
           {["PDFs","Sheets","Zapier/Make","Gumroad/Payhip"].map((b,i)=>
