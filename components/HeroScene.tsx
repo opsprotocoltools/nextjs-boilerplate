@@ -1,18 +1,18 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial } from "@react-three/drei";
+import { PointMaterial, OrbitControls } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
 function Stars() {
-  const ref = useRef<THREE.Points>(null!);
+  const pointsRef = useRef<THREE.Points>(null!);
 
   const positions = useMemo(() => {
-    const count = 1800;
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const r = 1.2 + Math.random() * 2.8;
+    const n = 1500;
+    const arr = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      const r = 1.8 + Math.random() * 2.2;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const x = r * Math.sin(phi) * Math.cos(theta);
@@ -25,26 +25,29 @@ function Stars() {
     return arr;
   }, []);
 
-  useFrame((_s, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.15;
+  const geom = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    return g;
+  }, [positions]);
+
+  useFrame((_, delta) => {
+    if (pointsRef.current) pointsRef.current.rotation.y += delta * 0.1;
   });
 
   return (
-    <Points ref={ref} positions={positions} stride={3}>
-      <PointMaterial size={0.015} transparent depthWrite={false} />
-    </Points>
+    <points ref={pointsRef} geometry={geom}>
+      <PointMaterial transparent size={0.01} color="#9AEAF9" />
+    </points>
   );
 }
 
 export default function HeroScene() {
   return (
-    <Canvas
-      camera={{ position: [0, 0, 3], fov: 60 }}
-      dpr={[1, 2]}
-      gl={{ antialias: true }}
-    >
-      <ambientLight intensity={0.4} />
+    <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+      <color attach="background" args={["#0b1220"]} />
       <Stars />
+      <OrbitControls enableZoom={false} />
     </Canvas>
   );
 }
