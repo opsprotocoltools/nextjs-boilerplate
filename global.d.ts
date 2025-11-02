@@ -1,4 +1,3 @@
-// global.d.ts — make React Three Fiber JSX valid globally
 import '@react-three/fiber';
 
 declare global {
