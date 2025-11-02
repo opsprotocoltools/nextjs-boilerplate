@@ -1,62 +1,50 @@
-'use client';
+"use client";
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import * as THREE from 'three';
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Points, PointMaterial } from "@react-three/drei";
+import { useMemo, useRef } from "react";
+import * as THREE from "three";
 
-// Teach TypeScript that <primitive> and <points> exist
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      primitive: any;
-      points: any;
-    }
-  }
-}
+function Stars() {
+  const ref = useRef<THREE.Points>(null!);
 
-function SparkleCloud() {
-  const pointsRef = useRef<THREE.Points>(null!);
-
-  const points = useMemo(() => {
-    const count = 1500;
-    const positions = new Float32Array(count * 3);
+  const positions = useMemo(() => {
+    const count = 1800;
+    const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 1 + Math.random() * 1.8;
-      const phi = Math.random() * Math.PI * 2;
-      const u = Math.random() * 2 - 1;
-      const theta = Math.acos(u);
-      positions[i * 3 + 0] = r * Math.sin(theta) * Math.cos(phi);
-      positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-      positions[i * 3 + 2] = r * Math.cos(theta);
+      const r = 1.2 + Math.random() * 2.8;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const x = r * Math.sin(phi) * Math.cos(theta);
+      const y = r * Math.sin(phi) * Math.sin(theta);
+      const z = r * Math.cos(phi);
+      arr[i * 3 + 0] = x;
+      arr[i * 3 + 1] = y;
+      arr[i * 3 + 2] = z;
     }
-
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const mat = new THREE.PointsMaterial({
-      size: 0.02,
-      transparent: true,
-      opacity: 0.9,
-      depthWrite: false,
-      color: new THREE.Color('#7dd3fc'),
-    });
-
-    const mesh = new THREE.Points(geom, mat);
-    return mesh;
+    return arr;
   }, []);
 
-  useFrame((_, delta) => {
-    if (points) points.rotation.y += delta * 0.12;
+  useFrame((_s, delta) => {
+    if (ref.current) ref.current.rotation.y += delta * 0.15;
   });
 
-  return <primitive ref={pointsRef} object={points} />;
+  return (
+    <Points ref={ref} positions={positions} stride={3}>
+      <PointMaterial size={0.015} transparent depthWrite={false} />
+    </Points>
+  );
 }
 
 export default function HeroScene() {
   return (
-    <Canvas camera={{ position: [0, 0, 3], fov: 50 }}>
-      <ambientLight intensity={0.6} />
-      <SparkleCloud />
+    <Canvas
+      camera={{ position: [0, 0, 3], fov: 60 }}
+      dpr={[1, 2]}
+      gl={{ antialias: true }}
+    >
+      <ambientLight intensity={0.4} />
+      <Stars />
     </Canvas>
   );
 }
